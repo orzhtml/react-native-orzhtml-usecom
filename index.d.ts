@@ -8,7 +8,7 @@ export interface setSingleStateFn<T> {
   (partialStates: partialStates<T>, callback?: callbackFn): void;
 }
 
-export interface getStateFn<T> {
+export interface getStateFn {
   (): T
 }
 
@@ -24,8 +24,8 @@ export interface setIntervalValFn<T> {
   (val: T): void
 }
 
-export function useStateCB<T>(initialState?: T): [getStateFn<T>, setStateFn<T>]
+export function useStateCB<T>(initialState: T): [getStateFn<T>, setStateFn<T>]
 
-export function useSingleState<T>(initialState?: T): [T, setSingleStateFn<T>]
+export function useSingleState<T>(initialState: T): [T, setSingleStateFn<T>]
 
-export function useSingleInstanceVar<T>(initialState?: T): T
+export function useSingleInstanceVar<T>(initialState: T): T

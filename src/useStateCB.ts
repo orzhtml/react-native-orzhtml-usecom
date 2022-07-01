@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 
-import { getStateFn, setStateFn } from '../../index.d'
+import { getStateFn, setStateFn } from '../index.d'
 
 import useSingleInstanceVar from './useSingleInstanceVar'
 
 // 让你可以安全地使用 react 的 state，它的值就是你想要的值，
 // 而不是陈旧的值。并且也拥有了 callback 的能力。
-function useStateCB<T>(initialState?: T): [getStateFn<T>, setStateFn<T>] {
+function useStateCB<T>(initialState: T): [getStateFn, setStateFn<T>] {
   const [state, setState] = useState<T>(initialState)
-  const Instance = useSingleInstanceVar({
+  const Instance = useSingleInstanceVar<{
+    [p: string]: any;
+  }>({
     state: initialState,
     callback: null
   })
