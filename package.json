@@ -1,0 +1,45 @@
+{
+  "name": "react-native-orzhtml-usecom",
+  "version": "1.0.0",
+  "description": "react react-native typescript：hooks 的状态 use 扩展",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orzhtml/react-native-orzhtml-usecom.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "typescript",
+    "hooks",
+    "setState",
+    "state",
+    "useRef",
+    "useState",
+    "usecom"
+  ],
+  "author": "orzhtml",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/orzhtml/react-native-orzhtml-usecom/issues"
+  },
+  "homepage": "https://github.com/orzhtml/react-native-orzhtml-usecom#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
