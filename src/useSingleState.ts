@@ -6,7 +6,7 @@ import useStateCB from './useStateCB'
 
 // （推荐使用）使用类似于 class 形式的 this.state 和 this.setState 的方式来使用 state。
 // 同样可以安全地使用 state，并且拥有 callback 能力
-function useSingleState<T>(initialState: T): [T, setSingleStateFn<T>] {
+function useSingleState<T> (initialState: T): [T, setSingleStateFn<T>] {
   const [getState, setState] = useStateCB<T>(initialState)
   const stateObj = useRef({ ...initialState }).current
 
@@ -14,7 +14,7 @@ function useSingleState<T>(initialState: T): [T, setSingleStateFn<T>] {
     Object.keys(stateObj).forEach(key => {
       if (key) {
         Object.defineProperty(stateObj, key, {
-          get() {
+          get () {
             return getState()[key]
           },
         })

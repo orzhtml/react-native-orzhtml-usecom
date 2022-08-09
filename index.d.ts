@@ -2,13 +2,13 @@ export interface callbackFn {
   (): void
 }
 
-export type partialStates<T> = { [K in keyof T]?: T[K] };
+export type partialStatesType<T> = { [K in keyof T]?: T[K] };
 
 export interface setSingleStateFn<T> {
-  (partialStates: partialStates<T>, callback?: callbackFn): void;
+  (partialStates: partialStatesType<T>, callback?: callbackFn): void;
 }
 
-export interface getStateFn {
+export interface getStateFn<T> {
   (): T
 }
 

@@ -152,9 +152,118 @@ export const UseSingleInstanceVarDemoComp = () => {
 }
 ```
 
+### useDebounce
+防抖
 
-## 贡献
+```
+# Example
+...
+import { useDebounce } from 'react-native-orzhtml-usecom'
+const Home = (props) => {
+  const [a, setA] = useState(0)
+  const [b, setB] = useState(0)
+  const [cancel] = useDebounce(() => {
+    setB(a)
+  }, 2000, [a])
 
-参考学习的 https://github.com/daniel-dx/nice-hooks
+  const changeIpt = (e) => {
+    setA(e.target.value)
+  }
+  return <View>
+    <TextInput onChangeText={changeIpt} />
+    <Text>{ b } { a }</Text>
+  </View>
+}
+```
 
+### useThrottle
+节流
 
+```
+# Example
+...
+import { useThrottle } from 'react-native-orzhtml-usecom'
+const Home = (props) => {
+  const [a, setA] = useState(0)
+  const [b, setB] = useState(0)
+  const [cancel] = useThrottle(() => {
+    setB(a)
+  }, 2000, [a])
+
+  const changeIpt = (e) => {
+    setA(e.target.value)
+  }
+  return <View>
+    <TextInput onChangeText={changeIpt} />
+    <Text>{ b } { a }</Text>
+    <Button title="cancel" onPress={cancel}>
+  </View>
+}
+```
+
+### useFormChange
+表单/表头搜素hooks
+
+```
+# Example
+...
+
+import { useFormChange } from 'react-native-orzhtml-usecom'
+const [formData, setFormItem, reset] = useFormChange()
+
+...
+
+// const [formData, setFormItem, reset] = useFormChange({ name: '小明', sex: '男'})
+```
+
+### useInterval
+useInterval 定时器
+
+```
+# Example
+...
+
+import { useInterval } from 'react-native-orzhtml-usecom'
+const [interval, intervalClear] = useInterval()
+
+...
+
+interval(() => {
+  console.log(1)
+}, 1000, true)
+```
+
+### useTimeout
+useTimeout 定时器
+
+```
+# Example
+...
+
+import { useTimeout } from 'react-native-orzhtml-usecom'
+const [timeout, timeoutClear] = useTimeout()
+
+...
+
+timeout(() => {
+  console.log(1)
+}, 1000)
+```
+
+### useTableRequset
+列表 表格数据查询
+
+```
+# Example
+...
+// getList 接口
+const [tableData, handerChange, handerRefresh] = useTableRequest(query, getList)
+const { page ,pageSize,totalCount ,list } = tableData
+// 传入的接口数据返回要求如下，否则容易出错：
+//  {
+//     list: [],
+//     totalCount: 0,
+//     pageSize: 10,
+//     page: 1,
+//   }
+```

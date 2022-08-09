@@ -1,9 +1,9 @@
-import useStateCB from './src/useStateCB'
-import useSingleState from './src/useSingleState'
-import useSingleInstanceVar from './src/useSingleInstanceVar'
-
-export {
-  useStateCB,
-  useSingleState,
-  useSingleInstanceVar
-}
+export { default as useStateCB } from './src/useStateCB'
+export { default as useSingleState } from './src/useSingleState'
+export { default as useSingleInstanceVar } from './src/useSingleInstanceVar'
+export { default as useInterval } from './src/useInterval'
+export { default as useTimeout } from './src/useTimeout'
+export { default as useDebounce } from './src/useDebounce'
+export { default as useThrottle } from './src/useThrottle'
+export { default as useFormChange } from './src/useFormChange'
+export { default as useTableRequset } from './src/useTableRequset'
