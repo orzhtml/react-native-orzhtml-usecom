@@ -1,5 +1,5 @@
 export interface callbackFn {
-  (): void
+  (state?: any): void
 }
 
 export type partialStatesType<T> = { [K in keyof T]?: T[K] };

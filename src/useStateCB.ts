@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { getStateFn, setStateFn } from '../index.d'
 
+import { isFunction } from './utils'
 import useSingleInstanceVar from './useSingleInstanceVar'
 
 // 让你可以安全地使用 react 的 state，它的值就是你想要的值，
@@ -11,7 +12,7 @@ function useStateCB<T> (initialState: T): [getStateFn<T>, setStateFn<T>] {
   const Instance = useSingleInstanceVar<{
     [p: string]: any;
   }>({
-    state: initialState,
+    state: isFunction(initialState) ? initialState() : initialState,
     callback: null,
   })
 
