@@ -8,7 +8,7 @@ function useFormChange<T> (initialState?: T) {
   const handerForm = useMemo(() => {
     /* 改变表单单元项 */
     const setFormItem = (keys: string, value: any) => {
-      const form = formData.current
+      const form: any = formData.current
       form[keys] = value
       forceUpdate(value)
     }
@@ -19,7 +19,7 @@ function useFormChange<T> (initialState?: T) {
         formData.current = initialState
         return
       }
-      const current = formData.current
+      const current: any = formData.current
       for (let name in current) {
         current[name] = ''
       }

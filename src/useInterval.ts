@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react'
 
 import { isNumber } from './utils'
 
-function useInterval() {
+function useInterval () {
   const timerRef = useRef<number | NodeJS.Timer>(0)
 
   useEffect(() => {
@@ -14,7 +14,7 @@ function useInterval() {
   const interval = (
     fn: () => void,
     delay: number | undefined,
-    immediate?: boolean
+    immediate?: boolean,
   ) => {
     if (!isNumber(delay) || delay < 0) return
 

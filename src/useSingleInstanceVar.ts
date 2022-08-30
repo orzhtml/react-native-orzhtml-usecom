@@ -1,14 +1,15 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
+import useLatest from './useLatest'
 
 // （推荐使用）将所有实例变量声明在一起，并以更接近实例变量的方式使用
 function useSingleInstanceVar<T> (initialValue: T): T {
-  const instRef = useRef<T>(initialValue)
-  const returnVal = useRef({ ...initialValue }).current
+  const instRef = useLatest<any>(initialValue)
+  const returnVal = useLatest<any>({ ...initialValue })
 
   useEffect(() => {
-    Object.keys(returnVal).forEach(key => {
+    Object.keys(returnVal.current).forEach(key => {
       if (key) {
-        Object.defineProperty(returnVal, key, {
+        Object.defineProperty(returnVal.current, key, {
           get () {
             return instRef.current[key]
           },
@@ -20,7 +21,7 @@ function useSingleInstanceVar<T> (initialValue: T): T {
     })
   }, [])
 
-  return returnVal
+  return returnVal.current
 }
 
 export default useSingleInstanceVar
