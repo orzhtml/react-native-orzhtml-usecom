@@ -267,3 +267,17 @@ const { page ,pageSize,totalCount ,list } = tableData
 //     page: 1,
 //   }
 ```
+
+### useUpdate
+更新
+
+```
+# Example
+...
+// getList 接口
+const update = useUpdate()
+
+ return <View>
+    <Button title="更新" onPress={update}>
+  </View>
+```
