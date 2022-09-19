@@ -11,12 +11,12 @@ import useUnmountedRef from './useUnmountedRef'
 function useSingleState<T> (initialState: T): [T, setSingleStateFn<T>] {
   const unmountedRef = useUnmountedRef()
   const [getState, setState] = useStateCB<T>(initialState)
-  const stateObj = useRef({ ...(isFunction(initialState) ? initialState() : initialState) }).current
+  const stateObj = useRef({ ...(isFunction(initialState) ? initialState() : initialState) })
 
   useEffect(() => {
-    Object.keys(stateObj).forEach(key => {
+    Object.keys(stateObj.current).forEach(key => {
       if (key) {
-        Object.defineProperty(stateObj, key, {
+        Object.defineProperty(stateObj.current, key, {
           get () {
             return getState()[key]
           },
@@ -28,10 +28,12 @@ function useSingleState<T> (initialState: T): [T, setSingleStateFn<T>] {
   const newSetState = (partialStates: any, callback: any) => {
     /** 如果组件已卸载，请停止更新 */
     if (unmountedRef.current) return
-    setState({ ...getState(), ...partialStates }, callback)
+    const newState = { ...getState(), ...partialStates }
+    stateObj.current = newState
+    setState(newState, callback)
   }
 
-  return [stateObj, newSetState]
+  return [stateObj.current, newSetState]
 }
 
 export default useSingleState
