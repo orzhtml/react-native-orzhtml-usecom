@@ -11,13 +11,22 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen'
 
-import { useSingleState } from './app/libs/react-native-orzhtml-usecom'
+import { useSingleState, useSingleInstanceVar } from 'react-native-orzhtml-usecom'
 
 const App = () => {
-  const [state, setState] = useSingleState({
+  const [state, setState] = useSingleState<{
+    name: string;
+    num: number;
+    list: [];
+  }>({
     name: '1',
     num: 10,
     list: [],
+  })
+  const inst = useSingleInstanceVar<{
+    status: boolean;
+  }>({
+    status: true,
   })
   const aa = useRef(0)
   // const [name, setName] = useStateCB<any>('name')
