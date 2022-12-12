@@ -9,7 +9,7 @@ import useUnmountedRef from './useUnmountedRef'
  * 让你可以安全地使用 react 的 state，它的值就是你想要的值，
  * 而不是陈旧的值。并且也拥有了 callback 的能力。
  */
-function useStateCB<T> (initialState: T | (() => T)): [getStateFn<any>, setStateFn<any>] {
+function useStateCB<T> (initialState: T | (() => T)): [getStateFn<T>, setStateFn<T>] {
   const [state, setState] = useState<T>(initialState)
   const _stateRef = useRef(isFunction(initialState) ? initialState() : initialState)
   const _callbackRef = useRef<any>(null)

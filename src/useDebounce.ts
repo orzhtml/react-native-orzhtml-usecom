@@ -9,14 +9,14 @@ const useDebounce = (
   let timeout = useRef<number | NodeJS.Timer>(0)
 
   useEffect(() => {
-    if (timeout.current) clearTimeout(timeout.current)
+    if (timeout.current) clearTimeout(timeout.current as NodeJS.Timer)
     timeout.current = setTimeout(() => {
       fn()
     }, ms)
   }, deps)
 
   const cancel = () => {
-    clearTimeout(timeout.current)
+    clearTimeout(timeout.current as NodeJS.Timer)
     timeout.current = 0
   }
 
