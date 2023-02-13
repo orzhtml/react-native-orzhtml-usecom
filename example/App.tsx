@@ -11,13 +11,36 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen'
 
-import { useSingleState, useSingleInstanceVar } from 'react-native-orzhtml-usecom'
+// import { useSingleState, useSingleInstanceVar } from 'react-native-orzhtml-usecom'
+import { useSingleState, useSingleInstanceVar, useStateCB } from './app/libs/react-native-orzhtml-usecom'
+
+type ItemsType = {
+  channel_id: string,
+  source_id: string,
+  source: string,
+  source_remarks: string,
+  source_introduce: string,
+  channel: string,
+  channel_name: string,
+  type: string,
+  logo: string,
+  icon: string,
+  status: string,
+  money: string,
+  video: string,
+  illustrate: string,
+  showType: string,
+  rss_num: string,
+  time: string,
+  is_new: string,
+  color: string,
+}
 
 const App = () => {
   const [state, setState] = useSingleState<{
-    name: string;
-    num: number;
-    list: [];
+    name: string,
+    num: number,
+    list: ItemsType[],
   }>({
     name: '1',
     num: 10,
@@ -30,7 +53,7 @@ const App = () => {
   })
   const aa = useRef(0)
   // const [name, setName] = useStateCB<any>('name')
-  // const [num, setNum] = useStateCB(100)
+  const [num, setNum] = useStateCB<{a: number, b: string, list: ItemsType[], }>({ a: 100, b: '123', list: [] })
   // const [list, setList] = useStateCB([])
 
   useEffect(() => {
@@ -252,22 +275,20 @@ const App = () => {
       // setList(_listArr)
       setState({
         name: '小明小明',
-        num: 30300,
+        // num: 30300,
         list: _listArr,
+      }, () => {
+        setState({
+          num: 4000,
+          name: '1---',
+        })
       })
-      console.log('useEffect init 2')
+      console.log('useEffect init 2:', state.list[0].channel)
       aa.current = aa.current + 1
     }, 3000)
-    // setTimeout(() => {
-    //   setState({
-    //     num: 30300,
-    //   })
-    // }, 3000)
-    // setTimeout(() => {
-    //   setState({
-    //     name: '小明小明小明',
-    //   })
-    // }, 4000)
+    console.log('num:', num().a)
+    setNum({ a: 11111 })
+    console.log('num2:', num().list)
   }, [])
 
   const isDarkMode = useColorScheme() === 'dark'

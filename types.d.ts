@@ -2,6 +2,8 @@ export interface callbackFn {
   (state?: any): void
 }
 
+export type StatesType<T> = { [K in keyof T]: T[K] };
+
 export type partialStatesType<T> = { [K in keyof T]?: T[K] };
 
 export interface setSingleStateFn<T> {
@@ -9,11 +11,11 @@ export interface setSingleStateFn<T> {
 }
 
 export interface getStateFn<T> {
-  (): T
+  (): StatesType<T>
 }
 
 export interface setStateFn<T> {
-  (newState: T, callback?: callbackFn): void;
+  (newState: partialStatesType<T>, callback?: callbackFn): void;
 }
 
 export interface getIntervalValFn<T> {
