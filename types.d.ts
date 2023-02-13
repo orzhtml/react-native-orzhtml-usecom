@@ -11,7 +11,7 @@ export interface setSingleStateFn<T> {
 }
 
 export interface getStateFn<T> {
-  (): StatesType<T>
+  (): partialStatesType<T>
 }
 
 export interface setStateFn<T> {
