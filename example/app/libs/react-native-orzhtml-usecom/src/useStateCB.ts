@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-import { getStateFn, partialStatesType, setStateFn, StatesType } from '../type'
+import { getStateFn, setStateFn } from '../types'
 
 import { isFunction, isObject } from './utils'
 import useUnmountedRef from './useUnmountedRef'
@@ -9,9 +9,9 @@ import useUnmountedRef from './useUnmountedRef'
  * 让你可以安全地使用 react 的 state，它的值就是你想要的值，
  * 而不是陈旧的值。并且也拥有了 callback 的能力。
  */
-function useStateCB<T> (initialState: StatesType<T> | (() => StatesType<T>)): [getStateFn<T>, setStateFn<T>] {
-  const [state, setState] = useState<partialStatesType<T>>(initialState)
-  const _stateRef = useRef<partialStatesType<T>>(isFunction(initialState) ? initialState() : initialState)
+function useStateCB<T> (initialState: T | (() => T)): [getStateFn<T>, setStateFn<T>] {
+  const [state, setState] = useState<Partial<T>>(initialState)
+  const _stateRef = useRef<T>(isFunction(initialState) ? initialState() : initialState)
   const _callbackRef = useRef<any>(null)
   const unmountedRef = useUnmountedRef()
 
@@ -24,7 +24,7 @@ function useStateCB<T> (initialState: StatesType<T> | (() => StatesType<T>)): [g
     }
   }, [state])
 
-  const newSetState = useCallback((partialStates: partialStatesType<T>, callback: any) => {
+  const newSetState = useCallback((partialStates: any, callback: any) => {
     /** 如果组件已卸载，请停止更新 */
     if (unmountedRef.current) return
     if (callback) {
@@ -36,7 +36,7 @@ function useStateCB<T> (initialState: StatesType<T> | (() => StatesType<T>)): [g
     setState(newState)
   }, [state])
 
-  const getState = () => {
+  const getState = (): T => {
     return _stateRef.current
   }
 

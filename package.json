@@ -1,6 +1,6 @@
 {
   "name": "react-native-orzhtml-usecom",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "react react-native typescript：hooks 的状态 use 扩展",
   "main": "index.ts",
   "typings": "index.d.ts",

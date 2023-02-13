@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
 
-import { StatesType } from '../types'
-
 // 列表 表格数据查询
-function useTableRequset<T, R> (query: StatesType<T>, api: (arg0: any) => Promise<R | any>) {
+function useTableRequset<T, R> (query: T, api: (arg0: any) => Promise<R | any>) {
   /* 是否是第一次请求 */
   const fisrtRequest = useRef(false)
   /* 保存分页信息 */

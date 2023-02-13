@@ -12,7 +12,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen'
 
 // import { useSingleState, useSingleInstanceVar } from 'react-native-orzhtml-usecom'
-import { useSingleState, useSingleInstanceVar, useStateCB } from './app/libs/react-native-orzhtml-usecom'
+import { useSingleState, useSingleInstanceVar, useStateCB, useLatest } from './app/libs/react-native-orzhtml-usecom'
 
 type ItemsType = {
   channel_id: string,
@@ -46,11 +46,10 @@ const App = () => {
     num: 10,
     list: [],
   })
-  const inst = useSingleInstanceVar<{
-    status: boolean;
-  }>({
+  const inst = useSingleInstanceVar({
     status: true,
   })
+  const instVar = useLatest(1111)
   const aa = useRef(0)
   // const [name, setName] = useStateCB<any>('name')
   const [num, setNum] = useStateCB<{a: number, b: string, list: ItemsType[], }>({ a: 100, b: '123', list: [] })
@@ -283,12 +282,12 @@ const App = () => {
           name: '1---',
         })
       })
-      console.log('useEffect init 2:', state.list[0].channel)
+      console.log('useEffect init 2:', state.list[0].color)
       aa.current = aa.current + 1
     }, 3000)
     console.log('num:', num().a)
     setNum({ a: 11111 })
-    console.log('num2:', num().list)
+    console.log('num2:', num().b)
   }, [])
 
   const isDarkMode = useColorScheme() === 'dark'
@@ -298,7 +297,7 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   }
 
-  console.log('list:111', aa.current, state.list)
+  console.log('list:111', aa.current, state.list, inst.status, instVar.current)
 
   return (
     <View style={backgroundStyle}>
