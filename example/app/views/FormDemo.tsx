@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 
-import { useFormChange } from "../libs/react-native-orzhtml-usecom";
+// import { useFormChange } from "../libs/react-native-orzhtml-usecom";
+import { useFormChange } from 'react-native-orzhtml-usecom'
 
 function FormDemo() {
     const [formData, setFormItem, formErrors, handleSubmit, resetForm] = useFormChange({
