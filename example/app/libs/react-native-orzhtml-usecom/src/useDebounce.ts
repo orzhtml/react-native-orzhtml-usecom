@@ -1,23 +1,26 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, DependencyList } from 'react'
 
 // 防抖
 const useDebounce = (
   fn: () => void,
   ms = 30,
-  deps = [],
+  deps: DependencyList = [],
 ) => {
-  let timeout = useRef<number | NodeJS.Timer>(0)
+  const timeoutRef = useRef<number | NodeJS.Timer>()
 
   useEffect(() => {
-    if (timeout.current) clearTimeout(timeout.current as NodeJS.Timer)
-    timeout.current = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       fn()
     }, ms)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, deps)
 
   const cancel = () => {
-    clearTimeout(timeout.current as NodeJS.Timer)
-    timeout.current = 0
+    clearTimeout(timeoutRef.current)
+    timeoutRef.current = undefined
   }
 
   return [cancel]

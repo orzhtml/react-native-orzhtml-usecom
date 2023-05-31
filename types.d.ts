@@ -1,29 +1,43 @@
-export interface callbackFn {
-  (state?: any): void
+export interface CallbackFn {
+  (state?: any): void;
 }
 
-export interface setSingleStateFn<T> {
-  (partialStates: Partial<T>, callback?: callbackFn): void;
+export interface GetStateFn<T> {
+  (): T;
 }
 
-export interface getStateFn<T> {
-  (): T
+export interface SetStateFn<T> {
+  (newState: Partial<T>, callback?: CallbackFn): void;
 }
 
-export interface setStateFn<T> {
-  (newState: Partial<T>, callback?: callbackFn): void;
+export interface SetSingleStateFn<T> {
+  (partialStates: Partial<T>, callback?: CallbackFn): void;
 }
 
-export interface getIntervalValFn<T> {
-  (): T
-}
+export type FormField<T> = {
+  value: T;
+  required?: boolean;
+  message?: string;
+  validator?: (value: T) => string | undefined;
+};
 
-export interface setIntervalValFn<T> {
-  (val: T): void
-}
+export type FormSubmitResult<T> = {
+  formData: T;
+  errors?: { [K in keyof T]?: string };
+};
 
-export function useStateCB<T>(initialState: T): [getStateFn<T>, setStateFn<T>]
+export type KeyOf<T> = Extract<keyof T, string>
 
-export function useSingleState<T>(initialState: T): [T, setSingleStateFn<T>]
+export type UseFormChangeResult<T> = [
+  T,
+  <K extends keyof T>(key: K, value: Extract<T[K], { value: any }>['value']) => void,
+  { [K in keyof T]?: string },
+  () => FormSubmitResult<T>,
+  () => void
+];
 
-export function useSingleInstanceVar<T>(initialState: T): T
+export type CancelDebounceFn = () => void;
+
+export type IntervalClear = () => void;
+export type IntervalFn = (fn: () => void, delay: number | undefined, immediate?: boolean) => IntervalClear;
+export type IntervalHook = [IntervalFn, IntervalClear];
