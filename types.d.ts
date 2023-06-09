@@ -30,7 +30,7 @@ export type KeyOf<T> = Extract<keyof T, string>
 
 export type UseFormChangeResult<T> = [
   T,
-  <K extends keyof T>(key: K, value: Extract<T[K], { value: any }>['value']) => void,
+  (formItem: Partial<{ [K in keyof T]: T[K] extends FormField<infer V> ? V : never }>) => void,
   { [K in keyof T]?: string },
   () => FormSubmitResult<T>,
   () => void

@@ -2,7 +2,9 @@ import { useState, useCallback } from 'react';
 
 import { FormField, FormSubmitResult, UseFormChangeResult } from '../types';
 
-function useFormChange<T extends Record<string, FormField<any>>>(initialState: T): UseFormChangeResult<T> {
+function useFormChange<T extends Record<string, FormField<any>>>(initialState: T, configs?: {
+  errMessage: string,
+}): UseFormChangeResult<T> {
   const [formData, setFormData] = useState<T>(() => {
     // 使用 initialState 作为初始值
     return initialState;
@@ -10,16 +12,22 @@ function useFormChange<T extends Record<string, FormField<any>>>(initialState: T
 
   const [formErrors, setFormErrors] = useState<{ [K in keyof T]?: string }>({});
 
+  const { errMessage = 'Field cannot be empty' } = configs ?? {}
+
   const setFormItem = useCallback(
-    <K extends keyof T>(key: K, value: T[K]['value']) => {
+    (formItem: Partial<{ [K in keyof T]: T[K] extends FormField<infer V> ? V : never }>) => {
       setFormData((prevFormData) => {
         const updatedForm = { ...prevFormData };
-        (updatedForm[key] as FormField<T[K]['value']>).value = value;
+        Object.entries(formItem).forEach(([key, value]) => {
+          if (key in updatedForm) {
+            (updatedForm[key as keyof T] as FormField<any>).value = value;
+          }
+        });
         return updatedForm;
       });
     },
     []
-  );
+  );  
 
   const handleSubmit = useCallback((): FormSubmitResult<T> => {
     const formErrors: { [key in keyof T]?: string } = {};
@@ -27,7 +35,7 @@ function useFormChange<T extends Record<string, FormField<any>>>(initialState: T
     // 校验逻辑
     Object.entries(formData).forEach(([key, field]) => {
       if ((field as FormField<any>).required && !(field as FormField<any>).value) {
-        formErrors[key as keyof T] = (field as FormField<any>).message || 'Field cannot be empty';
+        formErrors[key as keyof T] = (field as FormField<any>).message || errMessage;
       } else if ((field as FormField<any>).validator) {
         const validationError = (field as FormField<any>).validator!((field as FormField<any>).value);
         if (validationError) {

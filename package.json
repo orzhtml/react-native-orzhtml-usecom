@@ -1,6 +1,6 @@
 {
   "name": "react-native-orzhtml-usecom",
-  "version": "1.0.21",
+  "version": "1.0.25",
   "description": "react react-native typescript：hooks 的状态 use 扩展",
   "main": "index.ts",
   "typings": "index.d.ts",
@@ -42,5 +42,11 @@
       "json",
       "node"
     ]
-  }
+  },
+  "files": [
+    "index.ts",
+    "index.d.ts",
+    "types.d.ts",
+    "src"
+  ]
 }

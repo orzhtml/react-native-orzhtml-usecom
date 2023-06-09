@@ -1,4 +1,4 @@
-import { DependencyList } from 'react';
+import React, { DependencyList } from 'react';
 import type { CancelDebounceFn, FormField, IntervalHook, UseFormChangeResult } from './types';
 
 declare module 'react-native-orzhtml-usecom' {
@@ -8,7 +8,9 @@ declare module 'react-native-orzhtml-usecom' {
         deps?: DependencyList
     ): [CancelDebounceFn];
     export function useFormChange<T extends Record<string, FormField<any>>>(
-        initialState: T
+        initialState: T, configs?: {
+            errMessage: string,
+        }
     ): UseFormChangeResult<T>;
     export function useInterval(): IntervalHook;
     export function useLatest<T>(value: T): React.MutableRefObject<T>;
@@ -20,7 +22,7 @@ declare module 'react-native-orzhtml-usecom' {
         fn: () => void,
         ms?: number,
         deps?: DependencyList,
-      ): [() => void];
+    ): [() => void];
     export function useTimeout(): readonly [(fn: () => void, delay: number | undefined) => void, () => void];
     export function useUnmountedRef(): React.MutableRefObject<boolean>;
 }

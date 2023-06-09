@@ -1,15 +1,15 @@
 import React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 
-// import { useFormChange } from "../libs/react-native-orzhtml-usecom";
-import { useFormChange } from 'react-native-orzhtml-usecom'
+import { useFormChange } from "../libs/react-native-orzhtml-usecom";
+// import { useFormChange } from 'react-native-orzhtml-usecom'
 
 function FormDemo() {
     const [formData, setFormItem, formErrors, handleSubmit, resetForm] = useFormChange({
         name: {
             value: '',
             required: true,
-            message: 'Name is required',
+            // message: 'Name is required',
         },
         email: {
             value: '',
@@ -22,11 +22,9 @@ function FormDemo() {
                 return undefined;
             },
         },
+    }, {
+        errMessage: 'is required',
     });
-
-    const handleInputChange = (key: keyof typeof formData, value: string) => {
-        setFormItem(key, value);
-    };
 
     const handleFormSubmit = () => {
         const result = handleSubmit();
@@ -45,7 +43,7 @@ function FormDemo() {
             <TextInput
                 style={styles.input}
                 value={formData.name.value}
-                onChangeText={(value) => handleInputChange('name', value)}
+                onChangeText={(value) => setFormItem({ name: value })}
             />
             {formErrors.name && <Text style={styles.error}>{formErrors.name}</Text>}
 
@@ -53,7 +51,7 @@ function FormDemo() {
             <TextInput
                 style={styles.input}
                 value={formData.email.value}
-                onChangeText={(value) => handleInputChange('email', value)}
+                onChangeText={(value) => setFormItem({ email: value })}
             />
             {formErrors.email && <Text style={styles.error}>{formErrors.email}</Text>}
 
