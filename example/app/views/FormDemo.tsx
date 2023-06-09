@@ -5,7 +5,7 @@ import { useFormChange } from "../libs/react-native-orzhtml-usecom";
 // import { useFormChange } from 'react-native-orzhtml-usecom'
 
 function FormDemo() {
-    const [formData, setFormItem, formErrors, handleSubmit, resetForm] = useFormChange({
+    const [formData, setFormItem, formErrors, submitForm, resetForm] = useFormChange({
         name: {
             value: '',
             required: true,
@@ -27,14 +27,13 @@ function FormDemo() {
     });
 
     const handleFormSubmit = () => {
-        const result = handleSubmit();
-        if (result.errors) {
+        submitForm().then(formData => {
+             // 处理表单提交
+             console.log('formData:', formData);
+        }).catch(error => {
             // 处理表单错误
-            console.log('Form has errors:', result.errors);
-        } else {
-            // 处理表单提交
-            console.log('Form data:', result.formData);
-        }
+            console.log('formData error:', error);
+        })
     };
 
     return (
@@ -42,7 +41,7 @@ function FormDemo() {
             <Text style={styles.label}>Name:</Text>
             <TextInput
                 style={styles.input}
-                value={formData.name.value}
+                value={formData.name}
                 onChangeText={(value) => setFormItem({ name: value })}
             />
             {formErrors.name && <Text style={styles.error}>{formErrors.name}</Text>}
@@ -50,7 +49,7 @@ function FormDemo() {
             <Text style={styles.label}>Email:</Text>
             <TextInput
                 style={styles.input}
-                value={formData.email.value}
+                value={formData.email}
                 onChangeText={(value) => setFormItem({ email: value })}
             />
             {formErrors.email && <Text style={styles.error}>{formErrors.email}</Text>}

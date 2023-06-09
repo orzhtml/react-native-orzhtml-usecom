@@ -14,6 +14,8 @@ export interface SetSingleStateFn<T> {
   (partialStates: Partial<T>, callback?: CallbackFn): void;
 }
 
+export type KeyOf<T> = Extract<keyof T, string>
+
 export type FormField<T> = {
   value: T;
   required?: boolean;
@@ -21,20 +23,17 @@ export type FormField<T> = {
   validator?: (value: T) => string | undefined;
 };
 
-export type FormSubmitResult<T> = {
-  formData: T;
-  errors?: { [K in keyof T]?: string };
-};
-
-export type KeyOf<T> = Extract<keyof T, string>
-
 export type UseFormChangeResult<T> = [
-  T,
-  (formItem: Partial<{ [K in keyof T]: T[K] extends FormField<infer V> ? V : never }>) => void,
-  { [K in keyof T]?: string },
-  () => FormSubmitResult<T>,
+  TransformedFormData<T>,
+  (formItem: Partial<TransformedFormData<T>>) => void,
+  { [K in keyof TransformedFormData<T>]?: string },
+  () => Promise<TransformedFormData<T>>,
   () => void
 ];
+
+export type TransformedFormData<T> = {
+  [K in keyof T]: T[K] extends FormField<infer V> ? V : never;
+};
 
 export type CancelDebounceFn = () => void;
 
