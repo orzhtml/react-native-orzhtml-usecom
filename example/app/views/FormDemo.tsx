@@ -2,22 +2,24 @@ import React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { useFormChange } from "../libs/react-native-orzhtml-usecom";
-// import { useFormChange } from 'react-native-orzhtml-usecom'
 
 function FormDemo() {
     const [formData, setFormItem, formErrors, submitForm, resetForm] = useFormChange({
         name: {
             value: '',
             required: true,
-            // message: 'Name is required',
         },
         email: {
             value: '',
-            required: true,
             message: 'Email is required',
-            validator: (value: string) => {
-                if (!value.includes('@')) {
-                    return 'Invalid email format';
+            validator: (value, data) => {
+                if (data.name) {
+                    if (!value) {
+                        return 'Email is required';
+                    }
+                    if (typeof value !== 'string' || !value.includes('@')) {
+                        return 'Invalid email format';
+                    }
                 }
                 return undefined;
             },
@@ -28,8 +30,8 @@ function FormDemo() {
 
     const handleFormSubmit = () => {
         submitForm().then(formData => {
-             // 处理表单提交
-             console.log('formData:', formData);
+            // 处理表单提交
+            console.log('formData:', formData);
         }).catch(error => {
             // 处理表单错误
             console.log('formData error:', error);
@@ -53,7 +55,6 @@ function FormDemo() {
                 onChangeText={(value) => setFormItem({ email: value })}
             />
             {formErrors.email && <Text style={styles.error}>{formErrors.email}</Text>}
-
             <Button title="Submit" onPress={handleFormSubmit} />
             <Button title="Reset" onPress={resetForm} />
         </View>

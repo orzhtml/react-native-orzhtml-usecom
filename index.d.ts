@@ -1,5 +1,5 @@
 import React, { DependencyList } from 'react';
-import type { CancelDebounceFn, FormField, IntervalHook, UseFormChangeResult } from './types';
+import type { CancelDebounceFn, FormDataType, FormField, UseFormChangeResult, IntervalHook } from './types';
 
 declare module 'react-native-orzhtml-usecom' {
     export function useDebounce(
@@ -7,11 +7,10 @@ declare module 'react-native-orzhtml-usecom' {
         ms?: number,
         deps?: DependencyList
     ): [CancelDebounceFn];
-    export function useFormChange<T extends Record<string, FormField<any>>>(
-        initialState: T, configs?: {
-            errMessage: string,
-        }
-    ): UseFormChangeResult<T>;
+    export function useFormChange<T extends Record<string, FormField<any, FormDataType>>>(
+        initialState: T,
+        configs?: { errMessage: string },
+      ): UseFormChangeResult<T>;
     export function useInterval(): IntervalHook;
     export function useLatest<T>(value: T): React.MutableRefObject<T>;
     export function useUpdate(): () => void;
