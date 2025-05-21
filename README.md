@@ -29,8 +29,8 @@ react react-native typescript：hooks 的状态 use 扩展
 
 让你可以安全地使用 react 的 state，它的值就是你想要的值，而不是陈旧的值。并且也拥有了 callback 的能力。
 
-```
-# Example
+```javascript
+// Example
 
 import React from 'react'
 import { View, Text, Button } from 'react-native'
@@ -62,8 +62,8 @@ export const UseStateCBDemoComp = () => {
 
 （推荐使用）使用类似于 `class` 形式的 `this.state` 和 `this.setState` 的方式来使用 `state`。同样可以安全地使用 state，并且拥有 callback 能力
 
-```
-# Example
+```javascript
+// Example
 
 import React from 'react'
 import { View, Text, Button } from 'react-native'
@@ -114,8 +114,8 @@ export const UseSingleStateDemoComp = () => {
 
 （推荐使用）将所有实例变量声明在一起，并以更接近实例变量的方式使用
 
-```
-# Example
+```javascript
+// Example
 
 import React from 'react'
 import { View, Text, Button } from 'react-native'
@@ -152,81 +152,206 @@ export const UseSingleInstanceVarDemoComp = () => {
 }
 ```
 
-### useDebounce
-防抖
+### useDebounce | useMockRequest
+防抖 | 模拟请求
 
-```
-# Example
-...
-import { useDebounce } from 'react-native-orzhtml-usecom'
-const Home = (props) => {
-  const [a, setA] = useState(0)
-  const [b, setB] = useState(0)
-  const [cancel] = useDebounce(() => {
-    setB(a)
-  }, 2000, [a])
+```javascript
+// Example
+// ...
+import {useDebounce, useMockRequest} from 'react-native-orzhtml-usecom';
 
-  const changeIpt = (e) => {
-    setA(e.target.value)
+const DebounceDemo = () => {
+  const {
+    execute: search,
+    cancel: cancelSearch,
+    isPending,
+  } = useDebounce(handleSearch, {
+    delay: 300,
+    leading: true,
+  });
+
+  const {execute: submit} = useDebounce(handleSubmit, 500);
+
+  const {mockRequest} = useMockRequest<{keyword: string}>();
+  const [keyword, setKeyword] = useState('');
+
+  async function handleSearch(text: string) {
+    console.log('search', text);
+    const response = await mockRequest({
+      mockData: {keyword: text},
+    });
+    console.log('handleSearch Success:', response);
   }
-  return <View>
-    <TextInput onChangeText={changeIpt} />
-    <Text>{ b } { a }</Text>
-  </View>
-}
+
+  async function handleSubmit() {
+    console.log('handleSubmit');
+    const response = await mockRequest({
+      mockData: {keyword: keyword},
+    });
+    console.log('handleSearch Success:', response);
+  }
+
+  return (
+    <View>
+      <TextInput
+        style={styles.input}
+        onChangeText={text => {
+          setKeyword(text);
+          search(text);
+        }}
+        onBlur={cancelSearch}
+      />
+
+      <Button title="提交表单" onPress={submit} />
+
+      {isPending && <ActivityIndicator />}
+    </View>
+  );
+};
+```
+
+### useMockRequest
+模拟请求，对于复杂嵌套类型：
+
+```javascript
+type PaginationData<T> = {
+  page: number;
+  pageSize: number;
+  total: number;
+  results: T[];
+};
+
+// 使用
+const { mockRequest } = useMockRequest<PaginationData<User>>();
+
+mockRequest({
+  mockData: {
+    page: 1,
+    pageSize: 10,
+    total: 100,
+    results: [/* User类型数组 */]
+  } // 自动校验嵌套类型
+});
 ```
 
 ### useThrottle
 节流
 
-```
-# Example
-...
-import { useThrottle } from 'react-native-orzhtml-usecom'
-const Home = (props) => {
-  const [a, setA] = useState(0)
-  const [b, setB] = useState(0)
-  const [cancel] = useThrottle(() => {
-    setB(a)
-  }, 2000, [a])
+```javascript
+// Example
+// ...
+import {useThrottle} from 'react-native-orzhtml-usecom';
 
-  const changeIpt = (e) => {
-    setA(e.target.value)
-  }
-  return <View>
-    <TextInput onChangeText={changeIpt} />
-    <Text>{ b } { a }</Text>
-    <Button title="cancel" onPress={cancel}>
-  </View>
-}
+const ThrottleDemo = () => {
+  const {execute: handleScroll} = useThrottle(
+    (y: number) => {
+      console.log('Current scroll position:', y);
+    },
+    {delay: 300},
+  );
+
+  const onScroll = (event: {nativeEvent: NativeScrollEvent}) => {
+    const {contentOffset} = event.nativeEvent;
+    handleScroll(contentOffset.y); // 传递纯数据而非事件对象
+  };
+
+  return (
+    <View style={styles.wrap}>
+      <ScrollView onScroll={onScroll}>
+        {Array.from({length: 500}).map((_, index) => (
+          <View key={index}>
+            <Text>第 {index + 1} 个测试项</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
 ```
 
 ### useFormChange
 表单/表头搜素hooks
 
-```
-# Example
-...
-
+```javascript
+// Example
+// ...
 import { useFormChange } from 'react-native-orzhtml-usecom'
-const [formData, setFormItem, reset] = useFormChange()
+const [formData, setFormItem, reset] = useFormChange()function FormDemo() {
+  const [formData, setFormItem, formErrors, submitForm, resetForm] =
+    useFormChange(
+      {
+        name: {
+          value: '',
+          required: true,
+        },
+        email: {
+          value: '',
+          message: 'Email is required',
+          validator: (value, data) => {
+            if (data.name) {
+              if (!value) {
+                return 'Email is required';
+              }
+              if (typeof value !== 'string' || !value.includes('@')) {
+                return 'Invalid email format';
+              }
+            }
+            return undefined;
+          },
+        },
+      },
+      {
+        errMessage: 'is required',
+      },
+    );
 
-...
+  const handleFormSubmit = () => {
+    submitForm()
+      .then(formData => {
+        // 处理表单提交
+        console.log('formData:', formData);
+      })
+      .catch(error => {
+        // 处理表单错误
+        console.log('formData error:', error);
+      });
+  };
 
-// const [formData, setFormItem, reset] = useFormChange({ name: '小明', sex: '男'})
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>Name:</Text>
+      <TextInput
+        style={styles.input}
+        value={formData.name}
+        onChangeText={value => setFormItem({name: value})}
+      />
+      {formErrors.name && <Text style={styles.error}>{formErrors.name}</Text>}
+
+      <Text style={styles.label}>Email:</Text>
+      <TextInput
+        style={styles.input}
+        value={formData.email}
+        onChangeText={value => setFormItem({email: value})}
+      />
+      {formErrors.email && <Text style={styles.error}>{formErrors.email}</Text>}
+      <Button title="Submit" onPress={handleFormSubmit} />
+      <Button title="Reset" onPress={resetForm} />
+    </View>
+  );
+}
 ```
 
 ### useInterval
 useInterval 定时器
 
-```
-# Example
-...
+```javascript
+// Example
+// ...
 
 import { useInterval } from 'react-native-orzhtml-usecom'
 const [interval, intervalClear] = useInterval()
 
-...
+// ...
 
 interval(() => {
   console.log(1)
@@ -236,44 +361,26 @@ interval(() => {
 ### useTimeout
 useTimeout 定时器
 
-```
-# Example
-...
+```javascript
+// Example
+// ...
 
 import { useTimeout } from 'react-native-orzhtml-usecom'
 const [timeout, timeoutClear] = useTimeout()
 
-...
+// ...
 
 timeout(() => {
   console.log(1)
 }, 1000)
 ```
 
-### useTableRequset
-列表 表格数据查询
-
-```
-# Example
-...
-// getList 接口
-const [tableData, handerChange, handerRefresh] = useTableRequest(query, getList)
-const { page ,pageSize,totalCount ,list } = tableData
-// 传入的接口数据返回要求如下，否则容易出错：
-//  {
-//     list: [],
-//     totalCount: 0,
-//     pageSize: 10,
-//     page: 1,
-//   }
-```
-
 ### useUpdate
 更新
 
-```
-# Example
-...
+```javascript
+// Example
+// ...
 // getList 接口
 const update = useUpdate()
 

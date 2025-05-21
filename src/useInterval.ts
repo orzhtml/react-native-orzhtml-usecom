@@ -1,45 +1,66 @@
-import { useEffect, useRef, useCallback } from 'react'
+import {useEffect, useRef, useCallback} from 'react';
 
-import { isNumber } from './utils'
+import { IntervalHook } from '../types'
 
-/**
- * 使用定时器的 Hook。
- * 可以设置定时执行的回调函数，并提供清除定时器的方法。
- */
-function useInterval() {
-  const timerRef = useRef<number | NodeJS.Timer>(0)
+function useInterval(): IntervalHook {
+  const intervalRef = useRef<ReturnType<typeof setTimeout>>();
+  const fnRef = useRef<Function>();
 
-  useEffect(() => {
-    return () => {
-      clear()
+  // 保存最新回调
+  const updateCallback = useCallback((fn: Function) => {
+    if (typeof fn !== 'function') {
+      throw new TypeError('useInterval: 回调函数必须是函数');
     }
-  }, [])
+    fnRef.current = fn;
+  }, []);
 
+  // 清除定时器
   const clear = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current as NodeJS.Timer)
-      timerRef.current = 0
-    }
-  }, [])
+    intervalRef.current && clearInterval(intervalRef.current);
+    intervalRef.current = undefined;
+  }, []);
 
-  const interval = useCallback(
-    (fn: () => void, delay: number | undefined, immediate?: boolean) => {
-      if (!isNumber(delay) || delay < 0) return
+  // 核心设置逻辑
+  const set = useCallback(
+    (
+      fn: Function,
+      delay: number,
+      options: {
+        immediate?: boolean;
+      } = {immediate: false},
+    ) => {
+      // 参数强制校验
+      if (typeof fn !== 'function') {
+        throw new TypeError('useTimeout: 第一个参数必须是函数');
+      }
+      // 参数校验
+      if (typeof delay !== 'number' || isNaN(delay)) {
+        throw new TypeError(`useTimeout: delay 必须是数字，当前收到 ${delay}`);
+      }
+      // 处理 delay 参数
+      const safeDelay = Math.max(0, Number(delay) || 0);
 
-      if (immediate) {
-        fn()
+      // 清理旧定时器
+      clear();
+      updateCallback(fn);
+
+      // 立即执行首次调用
+      if (options.immediate) {
+        fnRef.current?.();
       }
 
-      timerRef.current = setInterval(() => {
-        fn()
-      }, delay)
-
-      return clear
+      // 设置新定时器
+      intervalRef.current = setInterval(() => {
+        fnRef.current?.();
+      }, safeDelay);
     },
-    [clear]
-  )
+    [clear, updateCallback],
+  );
 
-  return [interval, clear]
+  // 组件卸载自动清理
+  useEffect(() => clear, [clear]);
+
+  return [set, clear] as const;
 }
 
-export default useInterval
+export default useInterval;

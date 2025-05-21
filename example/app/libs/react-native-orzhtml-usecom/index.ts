@@ -1,12 +1,13 @@
-export { default as useStateCB } from './src/useStateCB'
-export { default as useSingleState } from './src/useSingleState'
-export { default as useSingleInstanceVar } from './src/useSingleInstanceVar'
-export { default as useInterval } from './src/useInterval'
-export { default as useTimeout } from './src/useTimeout'
-export { default as useDebounce } from './src/useDebounce'
-export { default as useThrottle } from './src/useThrottle'
-export { default as useFormChange } from './src/useFormChange'
-export { default as useUnmountedRef } from './src/useUnmountedRef'
-export { default as useUpdate } from './src/useUpdate'
-export { default as useLatest } from './src/useLatest'
-export { default as useWorkdayCalculator } from './src/useWorkdayCalculator'
+export {default as useStateCB} from './src/useStateCB';
+export {default as useSingleState} from './src/useSingleState';
+export {default as useSingleInstanceVar} from './src/useSingleInstanceVar';
+export {default as useInterval} from './src/useInterval';
+export {default as useTimeout} from './src/useTimeout';
+export {default as useDebounce} from './src/useDebounce';
+export {default as useThrottle} from './src/useThrottle';
+export {default as useFormChange} from './src/useFormChange';
+export {default as useUnmountedRef} from './src/useUnmountedRef';
+export {default as useUpdate} from './src/useUpdate';
+export {default as useLatest} from './src/useLatest';
+export {default as useWorkdayCalculator} from './src/useWorkdayCalculator';
+export {default as useMockRequest} from './src/useMockRequest';
