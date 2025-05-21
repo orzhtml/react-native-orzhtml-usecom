@@ -276,7 +276,7 @@ const ThrottleDemo = () => {
 // Example
 // ...
 import { useFormChange } from 'react-native-orzhtml-usecom'
-const [formData, setFormItem, reset] = useFormChange()function FormDemo() {
+function FormDemo() {
   const [formData, setFormItem, formErrors, submitForm, resetForm] =
     useFormChange(
       {
